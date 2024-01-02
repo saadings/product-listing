@@ -10,10 +10,14 @@ const page = async ({
     "?productName=" +
     product;
 
-  // const response = await fetch(url, { cache: "no-cache" });
-  // const productRating = await response.json();
+  const response = await fetch(url, { cache: "no-cache" });
+  const productRating = await response.json();
 
-  return <div>{/* <ProductTable ratings={productRating} /> */}</div>;
+  return (
+    <div>
+      <ProductTable ratings={productRating} />
+    </div>
+  );
 };
 
 export default page;
