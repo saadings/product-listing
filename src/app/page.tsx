@@ -2,7 +2,7 @@ import ProductCard from "@/components/ProductCard";
 import { product } from "@prisma/client";
 
 export default async function Home() {
-  const response = await fetch("http://localhost:3000/api/products", {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
     cache: "no-cache",
   });
 

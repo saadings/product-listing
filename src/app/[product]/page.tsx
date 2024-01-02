@@ -6,7 +6,9 @@ const page = async ({
   params: { product: string };
 }) => {
   const url =
-    "http://localhost:3000/api/product-rating" + "?productName=" + product;
+    `${process.env.NEXT_PUBLIC_API_URL}/product-rating` +
+    "?productName=" +
+    product;
 
   const response = await fetch(url, { cache: "no-cache" });
   const productRating = await response.json();
