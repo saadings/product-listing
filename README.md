@@ -14,6 +14,10 @@ This project is a Next.js-based application for listing products. It includes fe
 
 To run this project, clone the repository and install the dependencies:
 
+git clone https://github.com/saadings/product-listing.git
+cd product-listing
+npm install
+
 ```bash
 npm run dev
 # or
