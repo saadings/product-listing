@@ -11,22 +11,68 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { notFound } from "next/navigation";
+import React, { useState } from "react";
 
-const Modal = ({ children }: { children: React.ReactNode }) => {
+const Modal = ({
+  productName,
+  isOpen,
+  setIsOpen,
+}: {
+  productName: string;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [user, setUser] = useState({
     name: "",
     email: "",
     rating: 0,
   });
+  const [loading, setLoading] = useState(false);
 
   const handleUserContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
+  const handleSubmit = async (e: any) => {
+    if (user.name === "" || user.email === "" || user.rating === 0) {
+      setIsOpen(false);
+      return;
+    }
+
+    if (user.rating > 5 || user.rating < 0) {
+      setIsOpen(false);
+      return;
+    }
+
+    setLoading(true);
+
+    const data = {
+      name: user.name,
+      email: user.email,
+      rating: user.rating,
+      productName,
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/api/user-rating", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      notFound();
+    } finally {
+      setIsOpen(false);
+      setLoading(false);
+    }
+  };
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={isOpen}>
+      <DialogTrigger asChild></DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Give a Rating</DialogTitle>
@@ -70,12 +116,16 @@ const Modal = ({ children }: { children: React.ReactNode }) => {
               value={user.rating}
               className="col-span-3"
               type="number"
+              min="0"
+              max="5"
               onChange={handleUserContentChange}
             />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button type="submit" onClick={handleSubmit} disabled={loading}>
+            Save changes
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

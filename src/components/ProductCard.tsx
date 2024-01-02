@@ -1,6 +1,8 @@
 import { StarFilledIcon, StarIcon, WalletIcon } from "@/assets/svgs/Svg";
 import Button from "./Button";
 import Modal from "./Modal";
+import Link from "next/link";
+import Rating from "./Rating";
 
 const ProductCard = ({
   title,
@@ -28,19 +30,13 @@ const ProductCard = ({
               <WalletIcon />
               <p className="font-semibold text-[15px]">{price}$</p>
             </div>
+
             {/* Rating */}
-            <Modal>
-              <div className="flex flex-row space-x-1">
-                {[...Array(rating)].map((_, i) => (
-                  <StarFilledIcon key={i} />
-                ))}
-                {[...Array(5 - rating)].map((_, i) => (
-                  <StarIcon key={i} />
-                ))}
-              </div>
-            </Modal>
+            <Rating rating={rating} title={title} />
           </div>
-          <Button />
+          <Link href={"/" + title}>
+            <Button />
+          </Link>
         </div>
       </div>
     </>

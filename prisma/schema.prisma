@@ -6,7 +6,32 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model product {
+  id             String           @id @default(uuid())
+  name           String
+  description    String
+  price          Int
+  rating         Int              @default(0)
+  product_rating product_rating[]
+}
+
+model user {
+  id             String           @id @default(uuid())
+  name           String
+  email          String           @unique
+  product_rating product_rating[]
+}
+
+model product_rating {
+  id        String  @id @default(uuid())
+  rating    Int
+  productId String
+  userId    String
+  product   product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      user    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
